@@ -8,6 +8,7 @@ public class EyeTracking : MonoBehaviour
 {
     public GameObject TwoDGrid;
     public GameObject ThreeDHeadStabilizedGrid;
+    public GameObject ThreeDHeadPositionStabilizedGrid;
     public GameObject countdownText;
 
     private GameObject grid;
@@ -24,6 +25,7 @@ public class EyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartRecording();
     }
 
     // Update is called once per frame
@@ -48,6 +50,31 @@ public class EyeTracking : MonoBehaviour
         grid = ThreeDHeadStabilizedGrid;
         recording = true;
         StartCoroutine(Evaluation());
+    }
+
+    public void Start3DHeadPositionStabilizedEvaluation()
+    {
+        grid = ThreeDHeadPositionStabilizedGrid;
+        recording = true;
+        StartCoroutine(Evaluation());
+    }
+
+    public void StartRecording()
+    {
+        recording = true;
+        StartCoroutine(Record());
+    }
+
+    IEnumerator Record()
+    {
+        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        AddHeader();
+        yield return new WaitForSeconds(3);
+        recording = false;
+        string filePath = Path.Combine(Application.dataPath, filename);
+        Debug.Log(filePath);
+        File.WriteAllLines(filePath, log);
+        log.Clear();
     }
 
     IEnumerator Evaluation()
@@ -136,12 +163,12 @@ public class EyeTracking : MonoBehaviour
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.x,
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.y,
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.z,
-                CoreServices.InputSystem.GazeProvider.GazeOrigin.x,
-                CoreServices.InputSystem.GazeProvider.GazeOrigin.y,
-                CoreServices.InputSystem.GazeProvider.GazeOrigin.z,
-                CoreServices.InputSystem.GazeProvider.GazeDirection.x,
-                CoreServices.InputSystem.GazeProvider.GazeDirection.y,
-                CoreServices.InputSystem.GazeProvider.GazeDirection.z,
+                Camera.main.transform.position.x,
+                Camera.main.transform.position.y,
+                Camera.main.transform.position.z,
+                Camera.main.transform.rotation.x,
+                Camera.main.transform.rotation.y,
+                Camera.main.transform.rotation.z,
                 transform.position.x,
                 transform.position.y,
                 transform.position.z
