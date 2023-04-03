@@ -25,7 +25,6 @@ public class EyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartRecording();
     }
 
     // Update is called once per frame
