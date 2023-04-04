@@ -6,12 +6,13 @@ using Microsoft.MixedReality.Toolkit;
 
 public class EyeTracking : MonoBehaviour
 {
-    public GameObject TwoDGrid;
-    public GameObject ThreeDHeadStabilizedGrid;
-    public GameObject ThreeDHeadPositionStabilizedGrid;
+    public GameObject TwoD;
+    public GameObject ThreeDHeadStabilized;
+    public GameObject ThreeDHeadPositionStabilized;
     public GameObject countdownText;
 
     private GameObject grid;
+    private GameObject edges;
 
     private List<Transform> gridTransforms = new List<Transform>();
     private Transform start = null;
@@ -34,6 +35,10 @@ public class EyeTracking : MonoBehaviour
         {
             AddFrame();
         }
+        if (Input.GetKeyDown("up"))
+        {
+            Debug.Log("up key pressed");
+        }
     }
 
     public void Start2DEvaluation()
@@ -46,7 +51,11 @@ public class EyeTracking : MonoBehaviour
     
     public void Start3DHeadStabilizedEvaluation()
     {
-        grid = ThreeDHeadStabilizedGrid;
+        if (edges != null)
+        {
+            edges.GetComponent<Renderer>().enabled = false;
+        }
+        grid = ThreeDHeadStabilizedGrid.transform.Find;
         recording = true;
         StartCoroutine(Evaluation());
     }
