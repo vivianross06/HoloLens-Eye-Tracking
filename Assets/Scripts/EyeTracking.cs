@@ -11,6 +11,7 @@ public class EyeTracking : MonoBehaviour
     public GameObject ThreeDHeadPositionStabilized;
     public GameObject countdownText;
 
+    private GameObject currentObject;
     private GameObject grid;
     private GameObject edges;
 
@@ -35,15 +36,35 @@ public class EyeTracking : MonoBehaviour
         {
             AddFrame();
         }
+        if (Input.GetKeyDown("return"))
+        {
+            if (edges != null)
+            {
+                edges.SetActive(false);
+                currentObject.SetActive(false);
+                recording = true;
+                StartCoroutine(Evaluation());
+            }
+        }
         if (Input.GetKeyDown("up"))
         {
-            Debug.Log("up key pressed");
+            if (currentObject != null)
+            {
+                currentObject.transform.position += new Vector3(0, 0.03f, 0);
+            }
+        }
+        if (Input.GetKeyDown("down"))
+        {
+            if (currentObject != null)
+            {
+                currentObject.transform.position += new Vector3(0, -0.03f, 0);
+            }
         }
     }
 
     public void Start2DEvaluation()
     {
-        grid = TwoDGrid;
+        grid = TwoD;
         recording = true;
         StartCoroutine(Evaluation());
 
@@ -51,18 +72,22 @@ public class EyeTracking : MonoBehaviour
     
     public void Start3DHeadStabilizedEvaluation()
     {
+        Debug.Log("3D Head Stabilized");
         if (edges != null)
         {
-            edges.GetComponent<Renderer>().enabled = false;
+            edges.SetActive(false);
+            currentObject.SetActive(false);
         }
-        grid = ThreeDHeadStabilizedGrid.transform.Find;
-        recording = true;
-        StartCoroutine(Evaluation());
+        currentObject = ThreeDHeadStabilized;
+        grid = ThreeDHeadStabilized.transform.Find("Positions").gameObject;
+        edges = ThreeDHeadStabilized.transform.Find("Edges").gameObject;
+        edges.SetActive(true);
+        currentObject.SetActive(true);
     }
 
     public void Start3DHeadPositionStabilizedEvaluation()
     {
-        grid = ThreeDHeadPositionStabilizedGrid;
+        grid = ThreeDHeadPositionStabilized;
         recording = true;
         StartCoroutine(Evaluation());
     }
