@@ -9,6 +9,7 @@ public class EyeTracking : MonoBehaviour
     public GameObject TwoD;
     public GameObject ThreeDHeadStabilized;
     public GameObject ThreeDHeadPositionStabilized;
+    public GameObject WorldStabilized;
     public GameObject countdownText;
 
     private GameObject currentObject;
@@ -60,6 +61,20 @@ public class EyeTracking : MonoBehaviour
                 currentObject.transform.position += new Vector3(0, -0.03f, 0);
             }
         }
+        if (Input.GetKeyDown("left"))
+        {
+            if (currentObject != null)
+            {
+                currentObject.transform.position += new Vector3(-0.03f, 0, 0);
+            }
+        }
+        if (Input.GetKeyDown("right"))
+        {
+            if (currentObject != null)
+            {
+                currentObject.transform.position += new Vector3(0.03f, 0, 0);
+            }
+        }
     }
 
     public void Start2DEvaluation()
@@ -90,6 +105,21 @@ public class EyeTracking : MonoBehaviour
         grid = ThreeDHeadPositionStabilized;
         recording = true;
         StartCoroutine(Evaluation());
+    }
+
+    public void StartWorldStabilizedEvaluation()
+    {
+        Debug.Log("World Stabilized");
+        if (edges != null)
+        {
+            edges.SetActive(false);
+            currentObject.SetActive(false);
+        }
+        currentObject = WorldStabilized;
+        grid = currentObject.transform.Find("Positions").gameObject;
+        edges = currentObject.transform.Find("Edges").gameObject;
+        edges.SetActive(true);
+        currentObject.SetActive(true);
     }
 
     public void StartRecording()
