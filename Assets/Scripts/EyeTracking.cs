@@ -171,8 +171,8 @@ public class EyeTracking : MonoBehaviour
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
-        string filePath = Path.Combine(Application.persistentDataPath, filename);
-        //string filePath = Path.Combine(Application.dataPath, filename);
+        //string filePath = Path.Combine(Application.persistentDataPath, filename);
+        string filePath = Path.Combine(Application.dataPath, filename);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
@@ -206,7 +206,7 @@ public class EyeTracking : MonoBehaviour
     void AddFrame()
     {
         log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}",
-                System.DateTime.Now.ToString("HHmmss"),
+                System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff"),
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabled,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeCalibrationValid,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabledAndValid,
