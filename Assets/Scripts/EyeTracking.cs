@@ -25,6 +25,17 @@ public class EyeTracking : MonoBehaviour
     private bool recording = false;
     private string filename;
 
+    private string movement = "start";
+
+    private float pathTime = 5f;
+
+    private int[] nextPos = {
+                    24,19, 0,23,20,
+                    9, 0, 0, 0,21,
+                     0, 0, 0, 0, 0,
+                     3, 0, 0, 0,15,
+                     1, 2, 0, 5, 4};
+
     // Start is called before the first frame update
     void Start()
     {
@@ -160,14 +171,19 @@ public class EyeTracking : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
         countdownText.SetActive(false);
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 12; i++)
         {
-            for (float j = 0; j < 1; j += 0.005f)
+            float timeElapsed = 0.0f;
+            while (timeElapsed < pathTime)
             {
-                transform.position = Vector3.Lerp(start.position, end.position, j);
+                movement = "moving";
+                transform.position = Vector3.Lerp(start.position, end.position, timeElapsed / pathTime);
+                timeElapsed += Time.deltaTime;
                 yield return null;
             }
+            movement = "static";
             chooseNewPath();
+            yield return new WaitForSeconds(1.5f);
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
@@ -178,6 +194,24 @@ public class EyeTracking : MonoBehaviour
         log.Clear();
     }
 
+    void chooseNewPath()
+    {
+        if (end != null)
+        {
+            start = end;
+            startIndex = endIndex;
+            endIndex = nextPos[startIndex];
+            end = gridTransforms[endIndex];
+        }
+        else
+        {
+            startIndex = 0;
+            endIndex = nextPos[startIndex];
+            start = gridTransforms[startIndex];
+            end = gridTransforms[endIndex];
+        }
+    }
+    /*
     void chooseNewPath()
     {
         if (end != null)
@@ -202,10 +236,10 @@ public class EyeTracking : MonoBehaviour
             end = gridTransforms[endIndex];
         }
     }
-
+    */
     void AddFrame()
     {
-        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}",
+        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}",
                 System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff"),
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabled,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeCalibrationValid,
@@ -234,14 +268,15 @@ public class EyeTracking : MonoBehaviour
                 Camera.main.transform.rotation.z,
                 transform.position.x,
                 transform.position.y,
-                transform.position.z
+                transform.position.z,
+                movement
                 ));
     }
 
     void AddHeader()
     {
         log.Clear();
-        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}",
+        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}",
                 "Time",
                 "EyeTrackingEnabled",
                 "EyeCalibrationValid",
@@ -270,7 +305,8 @@ public class EyeTracking : MonoBehaviour
                 "HeadGazeDirection.z",
                 "transform.position.x",
                 "transform.position.y",
-                "transform.position.z"
+                "transform.position.z",
+                "Movement"
                 ));
     }
 }
