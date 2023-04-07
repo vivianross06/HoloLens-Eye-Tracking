@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
+using Vuforia;
 
 public class EyeTracking : MonoBehaviour
 {
-    public GameObject TwoD;
-    public GameObject ThreeDHeadStabilized;
-    public GameObject ThreeDHeadPositionStabilized;
+    public GameObject HeadStabilized;
     public GameObject WorldStabilized;
     public GameObject countdownText;
 
@@ -23,8 +22,10 @@ public class EyeTracking : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
+    private bool isStarting = false;
+    private bool worldStabilized = false;
+    private bool worldStabilizedGridFound = false;
     private string filename;
-
     private string movement = "start";
 
     private float pathTime = 5f;
@@ -47,6 +48,16 @@ public class EyeTracking : MonoBehaviour
         if (recording)
         {
             AddFrame();
+        }
+        if (worldStabilized && worldStabilizedGridFound)
+        {
+            isStarting = true;
+            transform.position = start.position;
+            GetComponent<Renderer>().enabled = true;
+        }
+        if (isStarting)
+        {
+            transform.position = start.position;
         }
         if (Input.GetKeyDown("return"))
         {
@@ -87,40 +98,36 @@ public class EyeTracking : MonoBehaviour
             }
         }
     }
-
-    public void Start2DEvaluation()
-    {
-        grid = TwoD;
-        recording = true;
-        StartCoroutine(Evaluation());
-
-    }
     
-    public void Start3DHeadStabilizedEvaluation()
+    public void StartHeadStabilizedEvaluation()
     {
-        Debug.Log("3D Head Stabilized");
+        Debug.Log("Head Stabilized");
         if (edges != null)
         {
             edges.SetActive(false);
             currentObject.SetActive(false);
         }
-        currentObject = ThreeDHeadStabilized;
-        grid = ThreeDHeadStabilized.transform.Find("Positions").gameObject;
-        edges = ThreeDHeadStabilized.transform.Find("Edges").gameObject;
+        currentObject = HeadStabilized;
+        grid = HeadStabilized.transform.Find("Positions").gameObject;
+        edges = HeadStabilized.transform.Find("Edges").gameObject;
         edges.SetActive(true);
         currentObject.SetActive(true);
-    }
-
-    public void Start3DHeadPositionStabilizedEvaluation()
-    {
-        grid = ThreeDHeadPositionStabilized;
-        recording = true;
-        StartCoroutine(Evaluation());
+        gridTransforms.Clear();
+        foreach (Transform child in grid.transform)
+        {
+            gridTransforms.Add(child);
+        }
+        startIndex = 0;
+        start = gridTransforms[startIndex];
+        transform.position = start.position;
+        isStarting = true;
+        GetComponent<Renderer>().enabled = true;
     }
 
     public void StartWorldStabilizedEvaluation()
     {
         Debug.Log("World Stabilized");
+        worldStabilized = true;
         if (edges != null)
         {
             edges.SetActive(false);
@@ -131,6 +138,18 @@ public class EyeTracking : MonoBehaviour
         edges = currentObject.transform.Find("Edges").gameObject;
         edges.SetActive(true);
         currentObject.SetActive(true);
+        gridTransforms.Clear();
+        foreach (Transform child in grid.transform)
+        {
+            gridTransforms.Add(child);
+        }
+        startIndex = 0;
+        start = gridTransforms[startIndex];
+    }
+
+    public void FindWorldStabilizedObject()
+    {
+        worldStabilizedGridFound = true;
     }
 
     public void StartRecording()
@@ -154,23 +173,25 @@ public class EyeTracking : MonoBehaviour
     IEnumerator Evaluation()
     {
         end = null;
-        gridTransforms.Clear();
-        foreach (Transform child in grid.transform)
-        {
-            gridTransforms.Add(child);
-        }
         filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         AddHeader();
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
-        GetComponent<Renderer>().enabled = true;
+        if (worldStabilized && !worldStabilizedGridFound)
+        {
+            countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
+            yield return new WaitForSeconds(3);
+            countdownText.SetActive(false);
+            yield break;
+        }
         for (int i = 3; i > 0; i--)
         {
             countdownText.GetComponent<TextMesh>().text = i.ToString();
             yield return new WaitForSeconds(1);
         }
         countdownText.SetActive(false);
+        isStarting = false;
         for (int i = 0; i < 12; i++)
         {
             float timeElapsed = 0.0f;
@@ -187,11 +208,13 @@ public class EyeTracking : MonoBehaviour
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
-        //string filePath = Path.Combine(Application.persistentDataPath, filename);
-        string filePath = Path.Combine(Application.dataPath, filename);
+        string filePath = Path.Combine(Application.persistentDataPath, filename);
+        //string filePath = Path.Combine(Application.dataPath, filename);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
+        worldStabilized = false;
+        worldStabilizedGridFound = false;
     }
 
     void chooseNewPath()
