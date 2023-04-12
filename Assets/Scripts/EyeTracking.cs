@@ -42,7 +42,7 @@ public class EyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Renderer>.enabled = false;
+        GetComponent<Renderer>().enabled = false;
     }
 
     // Update is called once per frame
