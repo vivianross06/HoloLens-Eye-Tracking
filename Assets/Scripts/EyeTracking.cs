@@ -7,6 +7,7 @@ using Vuforia;
 
 public class EyeTracking : MonoBehaviour
 {
+    public GameObject Calibration;
     public GameObject HeadStabilized;
     public GameObject WorldStabilized;
     public GameObject countdownText;
@@ -23,6 +24,7 @@ public class EyeTracking : MonoBehaviour
     private List<string> log = new List<string>();
     private bool recording = false;
     private bool isStarting = false;
+    private bool isCalibration = false;
     private bool worldStabilized = false;
     private bool worldStabilizedGridFound = false;
     private string filename;
@@ -40,6 +42,7 @@ public class EyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GetComponent<Renderer>.enabled = false;
     }
 
     // Update is called once per frame
@@ -66,7 +69,14 @@ public class EyeTracking : MonoBehaviour
                 edges.SetActive(false);
                 currentObject.SetActive(false);
                 recording = true;
-                StartCoroutine(Evaluation());
+                if (isCalibration)
+                {
+                    StartCoroutine(calibration());
+                }
+                else
+                {
+                    StartCoroutine(Evaluation());
+                }
             }
         }
         if (Input.GetKeyDown("up"))
@@ -147,6 +157,27 @@ public class EyeTracking : MonoBehaviour
         start = gridTransforms[startIndex];
     }
 
+    public void StartCalibration()
+    {
+        Debug.Log("Calibration");
+        if (edges != null)
+        {
+            edges.SetActive(false);
+            currentObject.SetActive(false);
+        }
+        currentObject = Calibration;
+        grid = currentObject.transform.Find("Positions").gameObject;
+        edges = currentObject.transform.Find("Edges").gameObject;
+        edges.SetActive(true);
+        currentObject.SetActive(true);
+        gridTransforms.Clear();
+        foreach (Transform child in grid.transform)
+        {
+            gridTransforms.Add(child);
+        }
+        isCalibration = true;
+    }
+
     public void FindWorldStabilizedObject()
     {
         worldStabilizedGridFound = true;
@@ -215,6 +246,48 @@ public class EyeTracking : MonoBehaviour
         log.Clear();
         worldStabilized = false;
         worldStabilizedGridFound = false;
+    }
+
+    IEnumerator calibration()
+    {
+        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        AddHeader();
+        countdownText.SetActive(true);
+        List<int> indices = new List<int>();
+        for (int i=0; i<13; i++)
+        {
+            indices.Add(i);
+        }
+        int nextIndex = Random.Range(0, indices.Count);
+        indices.Remove(nextIndex);
+        Transform nextPosition = gridTransforms[nextIndex];
+        transform.position = nextPosition.position;
+        countdownText.SetActive(true);
+        for (int i = 3; i > 0; i--)
+        {
+            countdownText.GetComponent<TextMesh>().text = i.ToString();
+            yield return new WaitForSeconds(1);
+        }
+        countdownText.SetActive(false);
+        movement = "static";
+        GetComponent<Renderer>().enabled = true;
+        while (indices.Count > 0)
+        {
+            Debug.Log(nextIndex);
+            transform.position = nextPosition.position;
+            yield return new WaitForSeconds(2);
+            nextIndex = indices[Random.Range(0, indices.Count)];
+            indices.Remove(nextIndex);
+            nextPosition = gridTransforms[nextIndex];
+        }
+        GetComponent<Renderer>().enabled = false;
+        recording = false;
+        string filePath = Path.Combine(Application.persistentDataPath, filename);
+        //string filePath = Path.Combine(Application.dataPath, filename);
+        Debug.Log(filePath);
+        File.WriteAllLines(filePath, log);
+        log.Clear();
+        isCalibration = false;
     }
 
     void chooseNewPath()
