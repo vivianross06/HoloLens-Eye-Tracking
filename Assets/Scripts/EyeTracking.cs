@@ -25,6 +25,7 @@ public class EyeTracking : MonoBehaviour
     private bool recording = false;
     private bool isStarting = false;
     private bool isCalibration = false;
+    private bool isStatic = false;
     private bool worldStabilized = false;
     private bool worldStabilizedGridFound = false;
     private string filename;
@@ -61,6 +62,10 @@ public class EyeTracking : MonoBehaviour
         if (isStarting)
         {
             transform.position = start.position;
+        }
+        if (isStatic)
+        {
+            transform.position = end.position;
         }
         if (Input.GetKeyDown("return"))
         {
@@ -235,7 +240,9 @@ public class EyeTracking : MonoBehaviour
             }
             movement = "static";
             chooseNewPath();
+            isStatic = true;
             yield return new WaitForSeconds(1.5f);
+            isStatic = false;
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
@@ -260,8 +267,8 @@ public class EyeTracking : MonoBehaviour
         }
         int nextIndex = Random.Range(0, indices.Count);
         indices.Remove(nextIndex);
-        Transform nextPosition = gridTransforms[nextIndex];
-        transform.position = nextPosition.position;
+        end = gridTransforms[nextIndex];
+        transform.position = end.position;
         countdownText.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
@@ -271,16 +278,18 @@ public class EyeTracking : MonoBehaviour
         countdownText.SetActive(false);
         movement = "static";
         GetComponent<Renderer>().enabled = true;
+        isStatic = true;
         while (indices.Count > 0)
         {
             Debug.Log(nextIndex);
-            transform.position = nextPosition.position;
+            transform.position = end.position;
             yield return new WaitForSeconds(2);
             nextIndex = indices[Random.Range(0, indices.Count)];
             indices.Remove(nextIndex);
-            nextPosition = gridTransforms[nextIndex];
+            end = gridTransforms[nextIndex];
         }
         GetComponent<Renderer>().enabled = false;
+        isStatic = false;
         recording = false;
         string filePath = Path.Combine(Application.persistentDataPath, filename);
         //string filePath = Path.Combine(Application.dataPath, filename);
