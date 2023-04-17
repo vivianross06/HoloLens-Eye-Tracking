@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
-using Vuforia;
 
-public class EyeTracking : MonoBehaviour
+public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
 {
-    public GameObject Calibration;
     public GameObject HeadStabilized;
-    public GameObject WorldStabilized;
     public GameObject countdownText;
 
     private GameObject currentObject;
@@ -23,14 +20,10 @@ public class EyeTracking : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
-    private bool isStarting = false;
-    private bool isCalibration = false;
-    private bool isStatic = false;
-    private bool worldStabilized = false;
-    private bool worldStabilizedGridFound = false;
     private string filename;
     private string movement = "start";
-    private int frameNumber = 0;
+    private int frameNumber;
+    private bool isEvaluating = false;
 
     private float pathTime = 5f;
 
@@ -44,7 +37,7 @@ public class EyeTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Renderer>().enabled = false;
+        
     }
 
     // Update is called once per frame
@@ -55,19 +48,13 @@ public class EyeTracking : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
-        if (worldStabilized && worldStabilizedGridFound)
-        {
-            isStarting = true;
-            transform.position = start.position;
-            GetComponent<Renderer>().enabled = true;
-        }
         if (isStarting)
         {
             transform.position = start.position;
         }
-        if (isStatic)
+        if (Input.GetKeyDown("q"))
         {
-            transform.position = end.position;
+            StartEvaluation();
         }
         if (Input.GetKeyDown("return"))
         {
@@ -76,47 +63,44 @@ public class EyeTracking : MonoBehaviour
                 edges.SetActive(false);
                 currentObject.SetActive(false);
                 recording = true;
-                if (isCalibration)
-                {
-                    StartCoroutine(calibration());
-                }
-                else
-                {
-                    StartCoroutine(Evaluation());
-                }
+                StartCoroutine(Evaluation());
             }
         }
-        if (Input.GetKeyDown("up"))
+        if (Input.GetKeyDown("up") && !isEvaluating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, 0.03f, 0);
+                transform.position = start.position;
             }
         }
-        if (Input.GetKeyDown("down"))
+        if (Input.GetKeyDown("down") && !isEvaluating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, -0.03f, 0);
+                transform.position = start.position;
             }
         }
-        if (Input.GetKeyDown("left"))
+        if (Input.GetKeyDown("left") && !isEvaluating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(-0.03f, 0, 0);
+                transform.position = start.position;
             }
         }
-        if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("right") && !isEvaluating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0.03f, 0, 0);
+                transform.position = start.position;
             }
         }
     }
-    
-    public void StartHeadStabilizedEvaluation()
+
+    public void StartEvaluation()
     {
         Debug.Log("Head Stabilized");
         if (edges != null)
@@ -137,79 +121,13 @@ public class EyeTracking : MonoBehaviour
         startIndex = 0;
         start = gridTransforms[startIndex];
         transform.position = start.position;
-        isStarting = true;
         GetComponent<Renderer>().enabled = true;
-    }
-
-    public void StartWorldStabilizedEvaluation()
-    {
-        Debug.Log("World Stabilized");
-        worldStabilized = true;
-        if (edges != null)
-        {
-            edges.SetActive(false);
-            currentObject.SetActive(false);
-        }
-        currentObject = WorldStabilized;
-        grid = currentObject.transform.Find("Positions").gameObject;
-        edges = currentObject.transform.Find("Edges").gameObject;
-        edges.SetActive(true);
-        currentObject.SetActive(true);
-        gridTransforms.Clear();
-        foreach (Transform child in grid.transform)
-        {
-            gridTransforms.Add(child);
-        }
-        startIndex = 0;
-        start = gridTransforms[startIndex];
-    }
-
-    public void StartCalibration()
-    {
-        Debug.Log("Calibration");
-        if (edges != null)
-        {
-            edges.SetActive(false);
-            currentObject.SetActive(false);
-        }
-        currentObject = Calibration;
-        grid = currentObject.transform.Find("Positions").gameObject;
-        edges = currentObject.transform.Find("Edges").gameObject;
-        edges.SetActive(true);
-        currentObject.SetActive(true);
-        gridTransforms.Clear();
-        foreach (Transform child in grid.transform)
-        {
-            gridTransforms.Add(child);
-        }
-        isCalibration = true;
-    }
-
-    public void FindWorldStabilizedObject()
-    {
-        worldStabilizedGridFound = true;
-    }
-
-    public void StartRecording()
-    {
-        recording = true;
-        StartCoroutine(Record());
-    }
-
-    IEnumerator Record()
-    {
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-        AddHeader();
-        yield return new WaitForSeconds(3);
-        recording = false;
-        string filePath = Path.Combine(Application.dataPath, filename);
-        Debug.Log(filePath);
-        File.WriteAllLines(filePath, log);
-        log.Clear();
+        isEvaluating = false;
     }
 
     IEnumerator Evaluation()
     {
+        isEvaluating = true;
         end = null;
         filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
@@ -217,20 +135,12 @@ public class EyeTracking : MonoBehaviour
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
-        if (worldStabilized && !worldStabilizedGridFound)
-        {
-            countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
-            yield return new WaitForSeconds(3);
-            countdownText.SetActive(false);
-            yield break;
-        }
         for (int i = 3; i > 0; i--)
         {
             countdownText.GetComponent<TextMesh>().text = i.ToString();
             yield return new WaitForSeconds(1);
         }
         countdownText.SetActive(false);
-        isStarting = false;
         for (int i = 0; i < 12; i++)
         {
             float timeElapsed = 0.0f;
@@ -243,9 +153,7 @@ public class EyeTracking : MonoBehaviour
             }
             movement = "static";
             chooseNewPath();
-            isStatic = true;
             yield return new WaitForSeconds(1.5f);
-            isStatic = false;
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
@@ -254,55 +162,6 @@ public class EyeTracking : MonoBehaviour
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
-        worldStabilized = false;
-        worldStabilizedGridFound = false;
-        frameNumber = 0;
-    }
-
-    IEnumerator calibration()
-    {
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-        frameNumber = 0;
-        AddHeader();
-        countdownText.SetActive(true);
-        List<int> indices = new List<int>();
-        for (int i=0; i<13; i++)
-        {
-            indices.Add(i);
-        }
-        int nextIndex = Random.Range(0, indices.Count);
-        indices.Remove(nextIndex);
-        end = gridTransforms[nextIndex];
-        transform.position = end.position;
-        countdownText.SetActive(true);
-        for (int i = 3; i > 0; i--)
-        {
-            countdownText.GetComponent<TextMesh>().text = i.ToString();
-            yield return new WaitForSeconds(1);
-        }
-        countdownText.SetActive(false);
-        movement = "static";
-        GetComponent<Renderer>().enabled = true;
-        isStatic = true;
-        while (indices.Count > 0)
-        {
-            Debug.Log(nextIndex);
-            transform.position = end.position;
-            yield return new WaitForSeconds(2);
-            nextIndex = indices[Random.Range(0, indices.Count)];
-            indices.Remove(nextIndex);
-            end = gridTransforms[nextIndex];
-        }
-        GetComponent<Renderer>().enabled = false;
-        isStatic = false;
-        recording = false;
-        string filePath = Path.Combine(Application.persistentDataPath, filename);
-        //string filePath = Path.Combine(Application.dataPath, filename);
-        Debug.Log(filePath);
-        File.WriteAllLines(filePath, log);
-        log.Clear();
-        isCalibration = false;
-        frameNumber = 0;
     }
 
     void chooseNewPath()
@@ -322,32 +181,7 @@ public class EyeTracking : MonoBehaviour
             end = gridTransforms[endIndex];
         }
     }
-    /*
-    void chooseNewPath()
-    {
-        if (end != null)
-        {
-            start = end;
-            startIndex = endIndex;
-            while (endIndex == startIndex)
-            {
-                endIndex = Random.Range(0, gridTransforms.Count);
-            }
-            end = gridTransforms[endIndex];
-        }
-        else
-        {
-            startIndex = 0;
-            endIndex = startIndex;
-            while (endIndex == startIndex)
-            {
-                endIndex = Random.Range(0, gridTransforms.Count);
-            }
-            start = gridTransforms[startIndex];
-            end = gridTransforms[endIndex];
-        }
-    }
-    */
+   
     void AddFrame()
     {
         log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}, {30}",
@@ -423,4 +257,3 @@ public class EyeTracking : MonoBehaviour
                 ));
     }
 }
-

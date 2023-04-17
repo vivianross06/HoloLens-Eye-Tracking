@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/ScreenStabilized.unity
+    guid: 48839bdb36f2a7d4d855016fb9721b21
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 79772f83c9896004dadbf452606acfe7,
       type: 2}

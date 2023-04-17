@@ -1,11 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using Microsoft.MixedReality.Toolkit;
-using Vuforia;
 
-public class EyeTracking : MonoBehaviour
+public class Calibration : MonoBehaviour
 {
     public GameObject Calibration;
     public GameObject HeadStabilized;
@@ -23,14 +20,10 @@ public class EyeTracking : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
-    private bool isStarting = false;
-    private bool isCalibration = false;
-    private bool isStatic = false;
-    private bool worldStabilized = false;
-    private bool worldStabilizedGridFound = false;
     private string filename;
     private string movement = "start";
     private int frameNumber = 0;
+    private bool isCalibrating = false;
 
     private float pathTime = 5f;
 
@@ -115,54 +108,6 @@ public class EyeTracking : MonoBehaviour
             }
         }
     }
-    
-    public void StartHeadStabilizedEvaluation()
-    {
-        Debug.Log("Head Stabilized");
-        if (edges != null)
-        {
-            edges.SetActive(false);
-            currentObject.SetActive(false);
-        }
-        currentObject = HeadStabilized;
-        grid = HeadStabilized.transform.Find("Positions").gameObject;
-        edges = HeadStabilized.transform.Find("Edges").gameObject;
-        edges.SetActive(true);
-        currentObject.SetActive(true);
-        gridTransforms.Clear();
-        foreach (Transform child in grid.transform)
-        {
-            gridTransforms.Add(child);
-        }
-        startIndex = 0;
-        start = gridTransforms[startIndex];
-        transform.position = start.position;
-        isStarting = true;
-        GetComponent<Renderer>().enabled = true;
-    }
-
-    public void StartWorldStabilizedEvaluation()
-    {
-        Debug.Log("World Stabilized");
-        worldStabilized = true;
-        if (edges != null)
-        {
-            edges.SetActive(false);
-            currentObject.SetActive(false);
-        }
-        currentObject = WorldStabilized;
-        grid = currentObject.transform.Find("Positions").gameObject;
-        edges = currentObject.transform.Find("Edges").gameObject;
-        edges.SetActive(true);
-        currentObject.SetActive(true);
-        gridTransforms.Clear();
-        foreach (Transform child in grid.transform)
-        {
-            gridTransforms.Add(child);
-        }
-        startIndex = 0;
-        start = gridTransforms[startIndex];
-    }
 
     public void StartCalibration()
     {
@@ -185,80 +130,6 @@ public class EyeTracking : MonoBehaviour
         isCalibration = true;
     }
 
-    public void FindWorldStabilizedObject()
-    {
-        worldStabilizedGridFound = true;
-    }
-
-    public void StartRecording()
-    {
-        recording = true;
-        StartCoroutine(Record());
-    }
-
-    IEnumerator Record()
-    {
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-        AddHeader();
-        yield return new WaitForSeconds(3);
-        recording = false;
-        string filePath = Path.Combine(Application.dataPath, filename);
-        Debug.Log(filePath);
-        File.WriteAllLines(filePath, log);
-        log.Clear();
-    }
-
-    IEnumerator Evaluation()
-    {
-        end = null;
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-        frameNumber = 0;
-        AddHeader();
-        chooseNewPath();
-        transform.position = start.position;
-        countdownText.SetActive(true);
-        if (worldStabilized && !worldStabilizedGridFound)
-        {
-            countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
-            yield return new WaitForSeconds(3);
-            countdownText.SetActive(false);
-            yield break;
-        }
-        for (int i = 3; i > 0; i--)
-        {
-            countdownText.GetComponent<TextMesh>().text = i.ToString();
-            yield return new WaitForSeconds(1);
-        }
-        countdownText.SetActive(false);
-        isStarting = false;
-        for (int i = 0; i < 12; i++)
-        {
-            float timeElapsed = 0.0f;
-            while (timeElapsed < pathTime)
-            {
-                movement = "moving";
-                transform.position = Vector3.Lerp(start.position, end.position, timeElapsed / pathTime);
-                timeElapsed += Time.deltaTime;
-                yield return null;
-            }
-            movement = "static";
-            chooseNewPath();
-            isStatic = true;
-            yield return new WaitForSeconds(1.5f);
-            isStatic = false;
-        }
-        GetComponent<Renderer>().enabled = false;
-        recording = false;
-        string filePath = Path.Combine(Application.persistentDataPath, filename);
-        //string filePath = Path.Combine(Application.dataPath, filename);
-        Debug.Log(filePath);
-        File.WriteAllLines(filePath, log);
-        log.Clear();
-        worldStabilized = false;
-        worldStabilizedGridFound = false;
-        frameNumber = 0;
-    }
-
     IEnumerator calibration()
     {
         filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
@@ -266,7 +137,7 @@ public class EyeTracking : MonoBehaviour
         AddHeader();
         countdownText.SetActive(true);
         List<int> indices = new List<int>();
-        for (int i=0; i<13; i++)
+        for (int i = 0; i < 13; i++)
         {
             indices.Add(i);
         }
@@ -322,32 +193,7 @@ public class EyeTracking : MonoBehaviour
             end = gridTransforms[endIndex];
         }
     }
-    /*
-    void chooseNewPath()
-    {
-        if (end != null)
-        {
-            start = end;
-            startIndex = endIndex;
-            while (endIndex == startIndex)
-            {
-                endIndex = Random.Range(0, gridTransforms.Count);
-            }
-            end = gridTransforms[endIndex];
-        }
-        else
-        {
-            startIndex = 0;
-            endIndex = startIndex;
-            while (endIndex == startIndex)
-            {
-                endIndex = Random.Range(0, gridTransforms.Count);
-            }
-            start = gridTransforms[startIndex];
-            end = gridTransforms[endIndex];
-        }
-    }
-    */
+
     void AddFrame()
     {
         log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}, {30}",
@@ -423,4 +269,3 @@ public class EyeTracking : MonoBehaviour
                 ));
     }
 }
-
