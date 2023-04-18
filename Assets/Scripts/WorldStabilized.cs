@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Microsoft.MixedReality.Toolkit;
 
-public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
+public class WorldStabilized : MonoBehaviour
 {
-    public GameObject HeadStabilized;
+    public GameObject WorldStabilizedObject;
     public GameObject countdownText;
 
     private GameObject currentObject;
@@ -21,9 +21,11 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
+    private bool worldStabilized = false;
+    private bool worldStabilizedGridFound = false;
     private string filename;
     private string movement = "start";
-    private int frameNumber;
+    private int frameNumber = 0;
     private bool isEvaluating = false;
 
     private float pathTime = 5f;
@@ -38,7 +40,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        GetComponent<Renderer>().enabled = false;
     }
 
     // Update is called once per frame
@@ -49,6 +51,11 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
+        if (worldStabilized && worldStabilizedGridFound)
+        {
+            transform.position = start.position;
+            GetComponent<Renderer>().enabled = true;
+        }
         if (Input.GetKeyDown("q"))
         {
             StartEvaluation();
@@ -57,7 +64,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             SceneManager.LoadScene("StartingScene");
         }
-        if (Input.GetKeyDown("return"))
+        if (Input.GetKeyDown("return") && !isEvaluating)
         {
             if (edges != null)
             {
@@ -72,7 +79,6 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, 0.03f, 0);
-                transform.position = start.position;
             }
         }
         if (Input.GetKeyDown("down") && !isEvaluating)
@@ -80,7 +86,6 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, -0.03f, 0);
-                transform.position = start.position;
             }
         }
         if (Input.GetKeyDown("left") && !isEvaluating)
@@ -88,7 +93,6 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(-0.03f, 0, 0);
-                transform.position = start.position;
             }
         }
         if (Input.GetKeyDown("right") && !isEvaluating)
@@ -96,22 +100,22 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0.03f, 0, 0);
-                transform.position = start.position;
             }
         }
     }
-
     public void StartEvaluation()
     {
-        Debug.Log("Head Stabilized");
+        Debug.Log("World Stabilized");
+        isEvaluating = false;
+        worldStabilized = true;
         if (edges != null)
         {
             edges.SetActive(false);
             currentObject.SetActive(false);
         }
-        currentObject = HeadStabilized;
-        grid = HeadStabilized.transform.Find("Positions").gameObject;
-        edges = HeadStabilized.transform.Find("Edges").gameObject;
+        currentObject = WorldStabilizedObject;
+        grid = currentObject.transform.Find("Positions").gameObject;
+        edges = currentObject.transform.Find("Edges").gameObject;
         edges.SetActive(true);
         currentObject.SetActive(true);
         gridTransforms.Clear();
@@ -121,9 +125,11 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         }
         startIndex = 0;
         start = gridTransforms[startIndex];
-        transform.position = start.position;
-        GetComponent<Renderer>().enabled = true;
-        isEvaluating = false;
+    }
+
+    public void FindWorldStabilizedObject()
+    {
+        worldStabilizedGridFound = true;
     }
 
     IEnumerator Evaluation()
@@ -136,6 +142,13 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
+        if (worldStabilized && !worldStabilizedGridFound)
+        {
+            countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
+            yield return new WaitForSeconds(3);
+            countdownText.SetActive(false);
+            yield break;
+        }
         for (int i = 3; i > 0; i--)
         {
             countdownText.GetComponent<TextMesh>().text = i.ToString();
@@ -163,6 +176,10 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
+        worldStabilized = false;
+        worldStabilizedGridFound = false;
+        frameNumber = 0;
+        isEvaluating = false;
         SceneManager.LoadScene("StartingScene");
     }
 
@@ -183,7 +200,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
             end = gridTransforms[endIndex];
         }
     }
-   
+
     void AddFrame()
     {
         log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}, {30}",

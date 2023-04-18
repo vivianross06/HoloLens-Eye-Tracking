@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Microsoft.MixedReality.Toolkit;
 
 public class Calibration : MonoBehaviour
 {
-    public GameObject Calibration;
-    public GameObject HeadStabilized;
-    public GameObject WorldStabilized;
+    public GameObject CalibrationObject;
     public GameObject countdownText;
 
     private GameObject currentObject;
@@ -14,25 +15,13 @@ public class Calibration : MonoBehaviour
     private GameObject edges;
 
     private List<Transform> gridTransforms = new List<Transform>();
-    private Transform start = null;
     private Transform end = null;
-    private int startIndex;
-    private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
     private string filename;
     private string movement = "start";
     private int frameNumber = 0;
     private bool isCalibrating = false;
-
-    private float pathTime = 5f;
-
-    private int[] nextPos = {
-                    24,19, 0,23,20,
-                    9, 0, 0, 0,21,
-                     0, 0, 0, 0, 0,
-                     3, 0, 0, 0,15,
-                     1, 2, 0, 5, 4};
 
     // Start is called before the first frame update
     void Start()
@@ -48,19 +37,13 @@ public class Calibration : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
-        if (worldStabilized && worldStabilizedGridFound)
+        if (Input.GetKeyDown("q"))
         {
-            isStarting = true;
-            transform.position = start.position;
-            GetComponent<Renderer>().enabled = true;
+            StartCalibration();
         }
-        if (isStarting)
+        if (Input.GetKeyDown("x"))
         {
-            transform.position = start.position;
-        }
-        if (isStatic)
-        {
-            transform.position = end.position;
+            SceneManager.LoadScene("StartingScene");
         }
         if (Input.GetKeyDown("return"))
         {
@@ -69,38 +52,31 @@ public class Calibration : MonoBehaviour
                 edges.SetActive(false);
                 currentObject.SetActive(false);
                 recording = true;
-                if (isCalibration)
-                {
-                    StartCoroutine(calibration());
-                }
-                else
-                {
-                    StartCoroutine(Evaluation());
-                }
+                StartCoroutine(calibration());
             }
         }
-        if (Input.GetKeyDown("up"))
+        if (Input.GetKeyDown("up") && !isCalibrating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, 0.03f, 0);
             }
         }
-        if (Input.GetKeyDown("down"))
+        if (Input.GetKeyDown("down") && !isCalibrating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(0, -0.03f, 0);
             }
         }
-        if (Input.GetKeyDown("left"))
+        if (Input.GetKeyDown("left") && !isCalibrating)
         {
             if (currentObject != null)
             {
                 currentObject.transform.position += new Vector3(-0.03f, 0, 0);
             }
         }
-        if (Input.GetKeyDown("right"))
+        if (Input.GetKeyDown("right") && !isCalibrating)
         {
             if (currentObject != null)
             {
@@ -112,12 +88,13 @@ public class Calibration : MonoBehaviour
     public void StartCalibration()
     {
         Debug.Log("Calibration");
+        isCalibrating = false;
         if (edges != null)
         {
             edges.SetActive(false);
             currentObject.SetActive(false);
         }
-        currentObject = Calibration;
+        currentObject = CalibrationObject;
         grid = currentObject.transform.Find("Positions").gameObject;
         edges = currentObject.transform.Find("Edges").gameObject;
         edges.SetActive(true);
@@ -127,12 +104,12 @@ public class Calibration : MonoBehaviour
         {
             gridTransforms.Add(child);
         }
-        isCalibration = true;
     }
 
     IEnumerator calibration()
     {
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        isCalibrating = true;
+        filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
         AddHeader();
         countdownText.SetActive(true);
@@ -154,10 +131,8 @@ public class Calibration : MonoBehaviour
         countdownText.SetActive(false);
         movement = "static";
         GetComponent<Renderer>().enabled = true;
-        isStatic = true;
         while (indices.Count > 0)
         {
-            Debug.Log(nextIndex);
             transform.position = end.position;
             yield return new WaitForSeconds(2);
             nextIndex = indices[Random.Range(0, indices.Count)];
@@ -165,33 +140,15 @@ public class Calibration : MonoBehaviour
             end = gridTransforms[nextIndex];
         }
         GetComponent<Renderer>().enabled = false;
-        isStatic = false;
         recording = false;
         string filePath = Path.Combine(Application.persistentDataPath, filename);
         //string filePath = Path.Combine(Application.dataPath, filename);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
-        isCalibration = false;
         frameNumber = 0;
-    }
-
-    void chooseNewPath()
-    {
-        if (end != null)
-        {
-            start = end;
-            startIndex = endIndex;
-            endIndex = nextPos[startIndex];
-            end = gridTransforms[endIndex];
-        }
-        else
-        {
-            startIndex = 0;
-            endIndex = nextPos[startIndex];
-            start = gridTransforms[startIndex];
-            end = gridTransforms[endIndex];
-        }
+        isCalibrating = false;
+        SceneManager.LoadScene("StartingScene");
     }
 
     void AddFrame()
