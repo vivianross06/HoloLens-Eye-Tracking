@@ -8,6 +8,7 @@ public class Calibration : MonoBehaviour
 {
     public GameObject CalibrationObject;
     public GameObject countdownText;
+    public GameObject taskManagerObject;
 
     private GameObject currentObject;
     private GameObject grid;
@@ -41,7 +42,8 @@ public class Calibration : MonoBehaviour
         if (recording)
         {
             filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            //string filePath = Path.Combine(Application.persistentDataPath, filename);
+            string filePath = Path.Combine(Application.dataPath, filename);
             File.WriteAllLines(filePath, log);
             log.Clear();
             recording = false;
@@ -173,6 +175,7 @@ public class Calibration : MonoBehaviour
         isCalibrating = false;
         countdownText.GetComponent<TextMesh>().text = "calibration";
         countdownText.SetActive(true);
+        taskManagerObject.GetComponent<TaskManager>().StartNextTask();
     }
 
     void AddFrame()

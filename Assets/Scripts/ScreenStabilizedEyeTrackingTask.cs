@@ -8,6 +8,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
 {
     public GameObject HeadStabilized;
     public GameObject countdownText;
+    public GameObject taskManager;
     public string filenamePrefix;
 
     private GameObject currentObject;
@@ -187,6 +188,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         log.Clear();
         isReady = false;
         isEvaluating = false;
+        taskManager.GetComponent<TaskManager>().StartNextTask();
     }
 
     void chooseNewPath()

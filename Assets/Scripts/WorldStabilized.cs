@@ -8,6 +8,7 @@ public class WorldStabilized : MonoBehaviour
 {
     public GameObject WorldStabilizedObject;
     public GameObject countdownText;
+    public GameObject taskManager;
     public string filenamePrefix;
 
     private GameObject currentObject;
@@ -21,7 +22,6 @@ public class WorldStabilized : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
-    private bool worldStabilized = false;
     private bool worldStabilizedGridFound = false;
     private string filename;
     private string movement = "start";
@@ -76,7 +76,7 @@ public class WorldStabilized : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
-        if (worldStabilized && worldStabilizedGridFound)
+        if (worldStabilizedGridFound)
         {
             transform.position = start.position;
             GetComponent<Renderer>().enabled = true;
@@ -128,7 +128,6 @@ public class WorldStabilized : MonoBehaviour
     {
         Debug.Log("World Stabilized");
         isEvaluating = false;
-        worldStabilized = true;
         if (edges != null)
         {
             edges.SetActive(false);
@@ -164,7 +163,7 @@ public class WorldStabilized : MonoBehaviour
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
-        if (worldStabilized && !worldStabilizedGridFound)
+        if (!worldStabilizedGridFound)
         {
             countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
             yield return new WaitForSeconds(3);
@@ -198,11 +197,10 @@ public class WorldStabilized : MonoBehaviour
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
-        worldStabilized = false;
-        worldStabilizedGridFound = false;
         frameNumber = 0;
         isEvaluating = false;
         isReady = false;
+        taskManager.GetComponent<TaskManager>().StartNextTask();
     }
 
     void chooseNewPath()
