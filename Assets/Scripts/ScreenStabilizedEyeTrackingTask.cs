@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Microsoft.MixedReality.Toolkit;
 
 public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
 {
     public GameObject HeadStabilized;
     public GameObject countdownText;
+    public string filenamePrefix;
 
     private GameObject currentObject;
     private GameObject grid;
@@ -25,6 +25,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
     private string movement = "start";
     private int frameNumber;
     private bool isEvaluating = false;
+    private bool isReady = false;
 
     private float pathTime = 5f;
 
@@ -38,7 +39,31 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    void OnEnable()
+    {
+        countdownText.GetComponent<TextMesh>().text = filenamePrefix;
+        countdownText.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        countdownText.SetActive(false);
+        if (recording)
+        {
+            filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            File.WriteAllLines(filePath, log);
+            log.Clear();
+            recording = false;
+        }
+        GetComponent<Renderer>().enabled = false;
+        isEvaluating = false;
+        isReady = false;
+        movement = "start";
+        frameNumber = 0;
     }
 
     // Update is called once per frame
@@ -53,13 +78,9 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             StartEvaluation();
         }
-        if (Input.GetKeyDown("x"))
-        {
-            SceneManager.LoadScene("StartingScene");
-        }
         if (Input.GetKeyDown("return"))
         {
-            if (edges != null)
+            if (isReady)
             {
                 edges.SetActive(false);
                 currentObject.SetActive(false);
@@ -124,13 +145,14 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         transform.position = start.position;
         GetComponent<Renderer>().enabled = true;
         isEvaluating = false;
+        isReady = true;
     }
 
     IEnumerator Evaluation()
     {
         isEvaluating = true;
         end = null;
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
         AddHeader();
         chooseNewPath();
@@ -163,7 +185,8 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
-        SceneManager.LoadScene("StartingScene");
+        isReady = false;
+        isEvaluating = false;
     }
 
     void chooseNewPath()

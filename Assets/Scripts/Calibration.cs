@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Microsoft.MixedReality.Toolkit;
 
 public class Calibration : MonoBehaviour
@@ -22,11 +21,36 @@ public class Calibration : MonoBehaviour
     private string movement = "start";
     private int frameNumber = 0;
     private bool isCalibrating = false;
+    private bool isReady = false;
 
     // Start is called before the first frame update
     void Start()
     {
         GetComponent<Renderer>().enabled = false;
+    }
+
+    void OnEnable()
+    {
+        countdownText.GetComponent<TextMesh>().text = "Calibration";
+        countdownText.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        countdownText.SetActive(false);
+        if (recording)
+        {
+            filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            File.WriteAllLines(filePath, log);
+            log.Clear();
+            recording = false;
+        }
+        GetComponent<Renderer>().enabled = false;
+        isCalibrating = false;
+        isReady = false;
+        movement = "start";
+        frameNumber = 0;
     }
 
     // Update is called once per frame
@@ -41,13 +65,9 @@ public class Calibration : MonoBehaviour
         {
             StartCalibration();
         }
-        if (Input.GetKeyDown("x"))
-        {
-            SceneManager.LoadScene("StartingScene");
-        }
         if (Input.GetKeyDown("return"))
         {
-            if (edges != null)
+            if (isReady)
             {
                 edges.SetActive(false);
                 currentObject.SetActive(false);
@@ -104,13 +124,16 @@ public class Calibration : MonoBehaviour
         {
             gridTransforms.Add(child);
         }
+        isReady = true;
     }
 
     IEnumerator calibration()
     {
+        isReady = false;
         isCalibrating = true;
         filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
+        movement = "start";
         AddHeader();
         countdownText.SetActive(true);
         List<int> indices = new List<int>();
@@ -148,7 +171,8 @@ public class Calibration : MonoBehaviour
         log.Clear();
         frameNumber = 0;
         isCalibrating = false;
-        SceneManager.LoadScene("StartingScene");
+        countdownText.GetComponent<TextMesh>().text = "calibration";
+        countdownText.SetActive(true);
     }
 
     void AddFrame()

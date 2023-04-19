@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Microsoft.MixedReality.Toolkit;
 
 public class WorldStabilized : MonoBehaviour
 {
     public GameObject WorldStabilizedObject;
     public GameObject countdownText;
+    public string filenamePrefix;
 
     private GameObject currentObject;
     private GameObject grid;
@@ -27,6 +27,7 @@ public class WorldStabilized : MonoBehaviour
     private string movement = "start";
     private int frameNumber = 0;
     private bool isEvaluating = false;
+    private bool isReady = false;
 
     private float pathTime = 5f;
 
@@ -41,6 +42,30 @@ public class WorldStabilized : MonoBehaviour
     void Start()
     {
         GetComponent<Renderer>().enabled = false;
+    }
+
+    void OnEnable()
+    {
+        countdownText.GetComponent<TextMesh>().text = filenamePrefix;
+        countdownText.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        countdownText.SetActive(false);
+        if (recording)
+        {
+            filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            File.WriteAllLines(filePath, log);
+            log.Clear();
+            recording = false;
+        }
+        GetComponent<Renderer>().enabled = false;
+        isEvaluating = false;
+        isReady = false;
+        movement = "start";
+        frameNumber = 0;
     }
 
     // Update is called once per frame
@@ -60,13 +85,9 @@ public class WorldStabilized : MonoBehaviour
         {
             StartEvaluation();
         }
-        if (Input.GetKeyDown("x"))
-        {
-            SceneManager.LoadScene("StartingScene");
-        }
         if (Input.GetKeyDown("return") && !isEvaluating)
         {
-            if (edges != null)
+            if (isReady)
             {
                 edges.SetActive(false);
                 currentObject.SetActive(false);
@@ -125,6 +146,7 @@ public class WorldStabilized : MonoBehaviour
         }
         startIndex = 0;
         start = gridTransforms[startIndex];
+        isReady = true;
     }
 
     public void FindWorldStabilizedObject()
@@ -136,7 +158,7 @@ public class WorldStabilized : MonoBehaviour
     {
         isEvaluating = true;
         end = null;
-        filename = System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+        filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
         AddHeader();
         chooseNewPath();
@@ -146,7 +168,7 @@ public class WorldStabilized : MonoBehaviour
         {
             countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
             yield return new WaitForSeconds(3);
-            countdownText.SetActive(false);
+            countdownText.GetComponent<TextMesh>().text = filenamePrefix;
             yield break;
         }
         for (int i = 3; i > 0; i--)
@@ -180,7 +202,7 @@ public class WorldStabilized : MonoBehaviour
         worldStabilizedGridFound = false;
         frameNumber = 0;
         isEvaluating = false;
-        SceneManager.LoadScene("StartingScene");
+        isReady = false;
     }
 
     void chooseNewPath()
