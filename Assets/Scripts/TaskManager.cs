@@ -10,12 +10,13 @@ public class TaskManager : MonoBehaviour
 
     private static int taskIndex = 0;
     private static List<int> tasks;
-
-    private List<int> order1 = new List<int>() { 4, 1, 2, 3, 5 };
-    private List<int> order2 = new List<int>() { 1, 3, 4, 5, 2 };
-    private List<int> order3 = new List<int>() { 5, 2, 3, 4, 1 };
-    private List<int> order4 = new List<int>() { 2, 4, 5, 1, 3 };
-    private List<int> order5 = new List<int>() { 3, 5, 1, 2, 4 };
+    
+    private List<int> order1 = new List<int>() { 5, 6, 2, 4, 1, 3 };
+    private List<int> order2 = new List<int>() { 1, 2, 4, 6, 3, 5 };
+    private List<int> order3 = new List<int>() { 2, 3, 5, 1, 4, 6 };
+    private List<int> order4 = new List<int>() { 4, 5, 1, 3, 6, 2 };
+    private List<int> order5 = new List<int>() { 3, 4, 6, 2, 5, 1 };
+    private List<int> order6 = new List<int>() { 6, 1, 3, 5, 2, 4 };
 
     private bool automaticMode = false;
 
@@ -99,6 +100,19 @@ public class TaskManager : MonoBehaviour
                 StartWorldStabilizedWalkingTask();
             }
         }
+        if (Input.GetKeyDown("6"))
+        {
+            if (automaticMode && (taskIndex == 0))
+            {
+                tasks = order6;
+                taskIndex = 0;
+                StartNextTask();
+            }
+            else if (!automaticMode)
+            {
+                StartHallwayTask();
+            }
+        }
         
     }
 
@@ -127,6 +141,10 @@ public class TaskManager : MonoBehaviour
         if (tasks[taskIndex] == 5)
         {
             StartWorldStabilizedWalkingTask();
+        }
+        if (tasks[taskIndex] == 6)
+        {
+            StartHallwayTask();
         }
         taskIndex++;
     }
@@ -170,12 +188,20 @@ public class TaskManager : MonoBehaviour
         worldTrackingSphere.GetComponent<WorldStabilized>().enabled = true;
     }
 
+    public void StartHallwayTask()
+    {
+        DisableEverything();
+        worldTrackingSphere.SetActive(true);
+        worldTrackingSphere.GetComponent<Hallway>().enabled = true;
+    }
+
         public void DisableEverything()
     {
         screenTrackingSphere.GetComponent<Calibration>().enabled = false;
         screenTrackingSphere.GetComponent<ScreenStabilizedEyeTrackingTask>().enabled = false;
         screenTrackingSphere.SetActive(false);
         worldTrackingSphere.GetComponent<WorldStabilized>().enabled = false;
+        worldTrackingSphere.GetComponent<Hallway>().enabled = false;
         worldTrackingSphere.SetActive(false);
     }
 }

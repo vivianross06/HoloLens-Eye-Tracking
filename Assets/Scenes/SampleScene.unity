@@ -446,6 +446,114 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &241952054
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8219493822719291000, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_Name
+      value: HallwayTracking
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291000, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8219493822719291003, guid: c50adcc851631e14f92548afbb9c4b3e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c50adcc851631e14f92548afbb9c4b3e, type: 3}
+--- !u!1 &241952055 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8219493822719291000, guid: c50adcc851631e14f92548afbb9c4b3e,
+    type: 3}
+  m_PrefabInstance: {fileID: 241952054}
+  m_PrefabAsset: {fileID: 0}
+--- !u!21 &648880808
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 'catffeinated-starry-cat-scaledMaterial
+
+    -48046'
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 51b86f54a7d1496b843eb164d23bf2cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,34 +991,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1224206076
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 'catffeinated-starry-cat-scaledMaterial
-
-    -24472'
-  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 51b86f54a7d1496b843eb164d23bf2cd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
 --- !u!1 &1443557133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1047,6 +1127,7 @@ GameObject:
   - component: {fileID: 1994234140}
   - component: {fileID: 1994234139}
   - component: {fileID: 1994234138}
+  - component: {fileID: 1994234143}
   m_Layer: 0
   m_Name: World Tracking Sphere
   m_TagString: Untagged
@@ -1144,6 +1225,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1994234143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994234137}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b9ac80c2170b4a4b8f1ec4829143aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TrackingPositions: {fileID: 241952055}
+  taskManager: {fileID: 963194225}
+  countdownText: {fileID: 1693756383}
 --- !u!1 &1995644160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1639,7 +1735,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 1224206076}
+      objectReference: {fileID: 648880808}
     - target: {fileID: 8056220615040140890, guid: 60940f3c49d9c974aaddd83b8352f4e6,
         type: 3}
       propertyPath: m_Name

@@ -44,6 +44,7 @@ public class Calibration : MonoBehaviour
             filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
             //string filePath = Path.Combine(Application.persistentDataPath, filename);
             string filePath = Path.Combine(Application.dataPath, filename);
+            Debug.Log(filePath);
             File.WriteAllLines(filePath, log);
             log.Clear();
             recording = false;

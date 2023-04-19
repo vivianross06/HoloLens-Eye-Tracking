@@ -7,6 +7,7 @@ using Microsoft.MixedReality.Toolkit;
 public class Hallway : MonoBehaviour
 {
     public GameObject TrackingPositions;
+    public GameObject taskManager;
     public GameObject countdownText;
 
     private List<Transform> gridTransforms = new List<Transform>();
@@ -19,7 +20,7 @@ public class Hallway : MonoBehaviour
     private int frameNumber = 0;
     private float pathTime =5f;
 
-    private float minDistance = 1f;
+    private float minDistance = 1.5f;
     private int currentIndex = 0;
 
     // Start is called before the first frame update
@@ -34,6 +35,30 @@ public class Hallway : MonoBehaviour
         TrackingPositions.SetActive(true);
     }
 
+    void OnEnable()
+    {
+        countdownText.GetComponent<TextMesh>().text = "hallway";
+        countdownText.SetActive(true);
+        TrackingPositions.SetActive(true);
+    }
+
+    void OnDisable()
+    {
+        countdownText.SetActive(false);
+        if (recording)
+        {
+            filename = "hallway_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            File.WriteAllLines(filePath, log);
+            log.Clear();
+            recording = false;
+        }
+        GetComponent<Renderer>().enabled = false;
+        movement = "start";
+        frameNumber = 0;
+        TrackingPositions.SetActive(false);
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -46,6 +71,10 @@ public class Hallway : MonoBehaviour
         {
             StartCoroutine(Evaluation());
         }
+        if (Input.GetKeyDown("p"))
+        {
+            TrackingPositions.SetActive(!TrackingPositions.activeSelf);
+        }
     }
 
     IEnumerator Evaluation()
@@ -54,6 +83,7 @@ public class Hallway : MonoBehaviour
         frameNumber = 0;
         AddHeader();
         recording = true;
+        currentIndex = 0;
         start = gridTransforms[currentIndex];
         end = gridTransforms[currentIndex + 1];
         TrackingPositions.SetActive(false);
@@ -88,13 +118,14 @@ public class Hallway : MonoBehaviour
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
-        //string filePath = Path.Combine(Application.persistentDataPath, filename);
-        string filePath = Path.Combine(Application.dataPath, filename);
+        string filePath = Path.Combine(Application.persistentDataPath, filename);
+        //string filePath = Path.Combine(Application.dataPath, filename);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
         frameNumber = 0;
         TrackingPositions.SetActive(true);
+        taskManager.GetComponent<TaskManager>().StartNextTask();
     }
 
     void AddFrame()
