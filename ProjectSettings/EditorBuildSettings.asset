@@ -5,18 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/StartingScene.unity
     guid: 6f6818daaf6fb86438037a76eb4b07e6
-  - enabled: 1
-    path: Assets/Scenes/Calibration.unity
-    guid: c7b45f29f1535f34f8e838e7caf67b2a
-  - enabled: 1
-    path: Assets/Scenes/ScreenStabilized.unity
-    guid: 48839bdb36f2a7d4d855016fb9721b21
-  - enabled: 1
-    path: Assets/Scenes/WorldStabilized.unity
-    guid: cade26ceab6a79d42b842c75ba5a2397
   m_configObjects:
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: 79772f83c9896004dadbf452606acfe7,
       type: 2}

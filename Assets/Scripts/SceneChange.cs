@@ -31,4 +31,24 @@ public class SceneChange : MonoBehaviour
     {
         SceneManager.LoadScene("WorldStabilized");
     }
+
+    public void Hallway()
+    {
+        SceneManager.LoadScene("Hallway");
+    }
+
+    public void StarterScene()
+    {
+        SceneManager.LoadScene("StartingScene");
+    }
+
+    public void TestScene()
+    {
+        SceneManager.LoadScene("TestScene");
+    }
+
+    public void TestScene2()
+    {
+        SceneManager.LoadScene("TestScene2");
+    }
 }

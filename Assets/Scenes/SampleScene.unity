@@ -121,6 +121,81 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &120538660
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 963194228}
+    m_Modifications:
+    - target: {fileID: 7245846620750251257, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_Name
+      value: Screen Tracking Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9939d7be0ac2d31429a35446388f71b6, type: 3}
+--- !u!4 &120538661 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7245846620750251262, guid: 9939d7be0ac2d31429a35446388f71b6,
+    type: 3}
+  m_PrefabInstance: {fileID: 120538660}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &192245409
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,34 +241,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &390130260
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 'catffeinated-starry-cat-scaledMaterial
-
-    30230'
-  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 51b86f54a7d1496b843eb164d23bf2cd, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +420,7 @@ Transform:
   - {fileID: 646557266799921333}
   - {fileID: 3941125167391507207}
   - {fileID: 1693756384}
+  - {fileID: 120538661}
   m_Father: {fileID: 1443557134}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -716,6 +764,34 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!21 &1224206076
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 'catffeinated-starry-cat-scaledMaterial
+
+    -24472'
+  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 51b86f54a7d1496b843eb164d23bf2cd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0.82089555, g: 0.82089555, b: 0.82089555, a: 1}
 --- !u!1 &1443557133
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,7 +855,7 @@ GameObject:
   - component: {fileID: 1994234139}
   - component: {fileID: 1994234138}
   m_Layer: 0
-  m_Name: Tracking Sphere
+  m_Name: World Tracking Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1370,7 +1446,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 390130260}
+      objectReference: {fileID: 1224206076}
     - target: {fileID: 8056220615040140890, guid: 60940f3c49d9c974aaddd83b8352f4e6,
         type: 3}
       propertyPath: m_Name
