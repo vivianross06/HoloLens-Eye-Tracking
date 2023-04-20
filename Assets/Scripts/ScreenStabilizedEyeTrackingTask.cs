@@ -65,6 +65,8 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         isReady = false;
         movement = "start";
         frameNumber = 0;
+        edges.SetActive(false);
+        currentObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -93,7 +95,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, 0.03f, 0);
+                currentObject.transform.position += currentObject.transform.up * 0.03f;
                 transform.position = start.position;
             }
         }
@@ -101,7 +103,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, -0.03f, 0);
+                currentObject.transform.position -= currentObject.transform.up * 0.03f;
                 transform.position = start.position;
             }
         }
@@ -109,7 +111,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(-0.03f, 0, 0);
+                currentObject.transform.position -= currentObject.transform.right * 0.03f;
                 transform.position = start.position;
             }
         }
@@ -117,7 +119,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0.03f, 0, 0);
+                currentObject.transform.position += currentObject.transform.right * 0.03f;
                 transform.position = start.position;
             }
         }

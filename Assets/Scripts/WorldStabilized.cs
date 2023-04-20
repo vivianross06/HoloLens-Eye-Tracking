@@ -66,6 +66,8 @@ public class WorldStabilized : MonoBehaviour
         isReady = false;
         movement = "start";
         frameNumber = 0;
+        edges.SetActive(false);
+        currentObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -76,10 +78,16 @@ public class WorldStabilized : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
+        /*
         if (worldStabilizedGridFound)
         {
             transform.position = start.position;
             GetComponent<Renderer>().enabled = true;
+        }
+        */
+        if (isReady)
+        {
+            transform.position = start.position;
         }
         if (Input.GetKeyDown("q"))
         {
@@ -99,28 +107,28 @@ public class WorldStabilized : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, 0.03f, 0);
+                currentObject.transform.position += currentObject.transform.up * 0.03f;
             }
         }
         if (Input.GetKeyDown("down") && !isEvaluating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, -0.03f, 0);
+                currentObject.transform.position -= currentObject.transform.up * 0.03f;
             }
         }
         if (Input.GetKeyDown("left") && !isEvaluating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(-0.03f, 0, 0);
+                currentObject.transform.position -= currentObject.transform.right * 0.03f;
             }
         }
         if (Input.GetKeyDown("right") && !isEvaluating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0.03f, 0, 0);
+                currentObject.transform.position += currentObject.transform.right * 0.03f;
             }
         }
     }
@@ -146,6 +154,8 @@ public class WorldStabilized : MonoBehaviour
         startIndex = 0;
         start = gridTransforms[startIndex];
         isReady = true;
+        transform.position = start.position;
+        GetComponent<Renderer>().enabled = true;
     }
 
     public void FindWorldStabilizedObject()
@@ -156,6 +166,7 @@ public class WorldStabilized : MonoBehaviour
     IEnumerator Evaluation()
     {
         isEvaluating = true;
+        isReady = false;
         end = null;
         filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
@@ -163,6 +174,7 @@ public class WorldStabilized : MonoBehaviour
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
+        /*
         if (!worldStabilizedGridFound)
         {
             countdownText.GetComponent<TextMesh>().text = "Tracked image not found";
@@ -170,6 +182,7 @@ public class WorldStabilized : MonoBehaviour
             countdownText.GetComponent<TextMesh>().text = filenamePrefix;
             yield break;
         }
+        */
         for (int i = 3; i > 0; i--)
         {
             countdownText.GetComponent<TextMesh>().text = i.ToString();
@@ -199,7 +212,6 @@ public class WorldStabilized : MonoBehaviour
         log.Clear();
         frameNumber = 0;
         isEvaluating = false;
-        isReady = false;
         taskManager.GetComponent<TaskManager>().StartNextTask();
     }
 

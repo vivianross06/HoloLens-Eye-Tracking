@@ -37,7 +37,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("1"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order1;
                 taskIndex = 0;
@@ -50,7 +50,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("2"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order2;
                 taskIndex = 0;
@@ -63,7 +63,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("3"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order3;
                 taskIndex = 0;
@@ -76,7 +76,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("4"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order4;
                 taskIndex = 0;
@@ -89,7 +89,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("5"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order5;
                 taskIndex = 0;
@@ -102,7 +102,7 @@ public class TaskManager : MonoBehaviour
         }
         if (Input.GetKeyDown("6"))
         {
-            if (automaticMode && (taskIndex == 0))
+            if (automaticMode && ((taskIndex == 0) || (taskIndex >= tasks.Count)))
             {
                 tasks = order6;
                 taskIndex = 0;

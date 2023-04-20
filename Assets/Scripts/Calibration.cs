@@ -49,6 +49,8 @@ public class Calibration : MonoBehaviour
             log.Clear();
             recording = false;
         }
+        edges.SetActive(false);
+        currentObject.SetActive(false);
         GetComponent<Renderer>().enabled = false;
         isCalibrating = false;
         isReady = false;
@@ -82,28 +84,28 @@ public class Calibration : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, 0.03f, 0);
+                currentObject.transform.position += currentObject.transform.up * 0.03f;
             }
         }
         if (Input.GetKeyDown("down") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0, -0.03f, 0);
+                currentObject.transform.position -= currentObject.transform.up * 0.03f;
             }
         }
         if (Input.GetKeyDown("left") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(-0.03f, 0, 0);
+                currentObject.transform.position -= currentObject.transform.right * 0.03f;
             }
         }
         if (Input.GetKeyDown("right") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += new Vector3(0.03f, 0, 0);
+                currentObject.transform.position += currentObject.transform.right * 0.03f;
             }
         }
     }
