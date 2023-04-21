@@ -176,8 +176,11 @@ public class Calibration : MonoBehaviour
         log.Clear();
         frameNumber = 0;
         isCalibrating = false;
-        countdownText.GetComponent<TextMesh>().text = "calibration";
         countdownText.SetActive(true);
+        countdownText.GetComponent<TextMesh>().text = "Done";
+        countdownText.SetActive(true);
+        yield return new WaitForSeconds(1);
+        countdownText.SetActive(false);
         taskManagerObject.GetComponent<TaskManager>().StartNextTask();
     }
 
