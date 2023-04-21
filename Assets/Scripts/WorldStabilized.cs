@@ -10,6 +10,7 @@ public class WorldStabilized : MonoBehaviour
     public GameObject countdownText;
     public GameObject taskManager;
     public string filenamePrefix;
+    public bool isBodyConstrained;
 
     private GameObject currentObject;
     private GameObject grid;
@@ -22,7 +23,7 @@ public class WorldStabilized : MonoBehaviour
     private int endIndex;
     private List<string> log = new List<string>();
     private bool recording = false;
-    private bool worldStabilizedGridFound = false;
+    //private bool worldStabilizedGridFound = false;
     private string filename;
     private string movement = "start";
     private int frameNumber = 0;
@@ -41,13 +42,14 @@ public class WorldStabilized : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Renderer>().enabled = false;
+        
     }
 
     void OnEnable()
     {
         countdownText.GetComponent<TextMesh>().text = filenamePrefix;
         countdownText.SetActive(true);
+        StartEvaluation();
     }
 
     void OnDisable()
@@ -55,7 +57,7 @@ public class WorldStabilized : MonoBehaviour
         countdownText.SetActive(false);
         if (recording)
         {
-            filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            filename = filenamePrefix + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
             string filePath = Path.Combine(Application.persistentDataPath, filename);
             File.WriteAllLines(filePath, log);
             log.Clear();
@@ -136,12 +138,15 @@ public class WorldStabilized : MonoBehaviour
     {
         Debug.Log("World Stabilized");
         isEvaluating = false;
-        if (edges != null)
-        {
-            edges.SetActive(false);
-            currentObject.SetActive(false);
-        }
         currentObject = WorldStabilizedObject;
+        if (isBodyConstrained)
+        {
+            currentObject.transform.localScale = new Vector3(1.1f, 0.9f, 1f);
+        }
+        else
+        {
+            currentObject.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+        }
         grid = currentObject.transform.Find("Positions").gameObject;
         edges = currentObject.transform.Find("Edges").gameObject;
         edges.SetActive(true);
@@ -157,11 +162,12 @@ public class WorldStabilized : MonoBehaviour
         transform.position = start.position;
         GetComponent<Renderer>().enabled = true;
     }
-
+    /*
     public void FindWorldStabilizedObject()
     {
         worldStabilizedGridFound = true;
     }
+    */
 
     IEnumerator Evaluation()
     {

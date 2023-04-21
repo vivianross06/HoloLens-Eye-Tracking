@@ -47,6 +47,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
     {
         countdownText.GetComponent<TextMesh>().text = filenamePrefix;
         countdownText.SetActive(true);
+        StartEvaluation();
     }
 
     void OnDisable()
@@ -54,7 +55,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         countdownText.SetActive(false);
         if (recording)
         {
-            filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            filename = filenamePrefix + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
             string filePath = Path.Combine(Application.persistentDataPath, filename);
             File.WriteAllLines(filePath, log);
             log.Clear();
@@ -95,7 +96,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.up * 0.03f;
+                currentObject.transform.position += currentObject.transform.up * 0.005f;
                 transform.position = start.position;
             }
         }
@@ -103,7 +104,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.up * 0.03f;
+                currentObject.transform.position -= currentObject.transform.up * 0.005f;
                 transform.position = start.position;
             }
         }
@@ -111,7 +112,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.right * 0.03f;
+                currentObject.transform.position -= currentObject.transform.right * 0.005f;
                 transform.position = start.position;
             }
         }
@@ -119,7 +120,7 @@ public class ScreenStabilizedEyeTrackingTask : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.right * 0.03f;
+                currentObject.transform.position += currentObject.transform.right * 0.005f;
                 transform.position = start.position;
             }
         }

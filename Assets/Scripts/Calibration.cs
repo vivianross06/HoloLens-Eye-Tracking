@@ -27,13 +27,14 @@ public class Calibration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GetComponent<Renderer>().enabled = false;
+        
     }
 
     void OnEnable()
     {
         countdownText.GetComponent<TextMesh>().text = "Calibration";
         countdownText.SetActive(true);
+        StartCalibration();
     }
 
     void OnDisable()
@@ -42,8 +43,8 @@ public class Calibration : MonoBehaviour
         if (recording)
         {
             filename = "calibration_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-            //string filePath = Path.Combine(Application.persistentDataPath, filename);
-            string filePath = Path.Combine(Application.dataPath, filename);
+            string filePath = Path.Combine(Application.persistentDataPath, filename);
+            //string filePath = Path.Combine(Application.dataPath, filename);
             Debug.Log(filePath);
             File.WriteAllLines(filePath, log);
             log.Clear();
@@ -84,28 +85,28 @@ public class Calibration : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.up * 0.03f;
+                currentObject.transform.position += currentObject.transform.up * 0.005f;
             }
         }
         if (Input.GetKeyDown("down") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.up * 0.03f;
+                currentObject.transform.position -= currentObject.transform.up * 0.005f;
             }
         }
         if (Input.GetKeyDown("left") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.right * 0.03f;
+                currentObject.transform.position -= currentObject.transform.right * 0.005f;
             }
         }
         if (Input.GetKeyDown("right") && !isCalibrating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.right * 0.03f;
+                currentObject.transform.position += currentObject.transform.right * 0.005f;
             }
         }
     }

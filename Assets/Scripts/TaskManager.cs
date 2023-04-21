@@ -169,6 +169,7 @@ public class TaskManager : MonoBehaviour
         DisableEverything();
         worldTrackingSphere.SetActive(true);
         worldTrackingSphere.GetComponent<WorldStabilized>().filenamePrefix = "wsBodyConstrained";
+        worldTrackingSphere.GetComponent<WorldStabilized>().isBodyConstrained = true;
         worldTrackingSphere.GetComponent<WorldStabilized>().enabled = true;
     }
 
@@ -185,6 +186,7 @@ public class TaskManager : MonoBehaviour
         DisableEverything();
         worldTrackingSphere.SetActive(true);
         worldTrackingSphere.GetComponent<WorldStabilized>().filenamePrefix = "wsWalking";
+        worldTrackingSphere.GetComponent<WorldStabilized>().isBodyConstrained = false;
         worldTrackingSphere.GetComponent<WorldStabilized>().enabled = true;
     }
 
