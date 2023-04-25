@@ -29,6 +29,7 @@ public class WorldStabilized : MonoBehaviour
     private int frameNumber = 0;
     private bool isEvaluating = false;
     private bool isReady = false;
+    private string movementMode = "translate";
 
     private float pathTime = 5f;
 
@@ -124,15 +125,61 @@ public class WorldStabilized : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.right * 0.03f;
+                if (movementMode == "translate")
+                {
+                    currentObject.transform.position -= currentObject.transform.right * 0.03f;
+                }
+                else if (movementMode == "x")
+                {
+                    currentObject.transform.Rotate(1.0f, 0f, 0f);
+                }
+                else if (movementMode == "y")
+                {
+                    currentObject.transform.Rotate(0f, 1.0f, 0f);
+                }
+                else if (movementMode == "z")
+                {
+                    currentObject.transform.Rotate(0f, 0f, 1.0f);
+                }
             }
         }
         if (Input.GetKeyDown("right") && !isEvaluating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.right * 0.03f;
+                if (movementMode == "translate")
+                {
+                    currentObject.transform.position += currentObject.transform.right * 0.03f;
+                }
+                else if (movementMode == "x")
+                {
+                    currentObject.transform.Rotate(-1.0f, 0f, 0f);
+                }
+                else if (movementMode == "y")
+                {
+                    currentObject.transform.Rotate(0f, -1.0f, 0f);
+                }
+                else if (movementMode == "z")
+                {
+                    currentObject.transform.Rotate(0f, 0f, -1.0f);
+                }
             }
+        }
+        if (Input.GetKeyDown("t"))
+        {
+            movementMode = "translate";
+        }
+        if (Input.GetKeyDown("y"))
+        {
+            movementMode = "x";
+        }
+        if (Input.GetKeyDown("u"))
+        {
+            movementMode = "y";
+        }
+        if (Input.GetKeyDown("i"))
+        {
+            movementMode = "z";
         }
     }
     public void StartEvaluation()
