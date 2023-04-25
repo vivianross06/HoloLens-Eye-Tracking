@@ -19,6 +19,7 @@ public class Hallway : MonoBehaviour
     private string movement = "start";
     private int frameNumber = 0;
     private float pathTime =5f;
+    private bool isEvaluating = false;
 
     private float minDistance = 1.5f;
     private int currentIndex = 0;
@@ -54,6 +55,7 @@ public class Hallway : MonoBehaviour
             recording = false;
         }
         GetComponent<Renderer>().enabled = false;
+        isEvaluating = false;
         movement = "start";
         frameNumber = 0;
         TrackingPositions.SetActive(false);
@@ -67,8 +69,9 @@ public class Hallway : MonoBehaviour
             AddFrame();
             frameNumber++;
         }
-        if (Input.GetKeyDown("return"))
+        if (Input.GetKeyDown("return") && !isEvaluating)
         {
+            GetComponent<AudioSource>().Play(0);
             StartCoroutine(Evaluation());
         }
         if (Input.GetKeyDown("p"))
@@ -79,6 +82,7 @@ public class Hallway : MonoBehaviour
 
     IEnumerator Evaluation()
     {
+        isEvaluating = true;
         filename = "hallway_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
         AddHeader();
@@ -125,6 +129,7 @@ public class Hallway : MonoBehaviour
         log.Clear();
         frameNumber = 0;
         TrackingPositions.SetActive(true);
+        isEvaluating = false;
         taskManager.GetComponent<TaskManager>().StartNextTask();
     }
 

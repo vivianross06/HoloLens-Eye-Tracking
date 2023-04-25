@@ -71,13 +71,14 @@ public class Calibration : MonoBehaviour
         {
             StartCalibration();
         }
-        if (Input.GetKeyDown("return"))
+        if (Input.GetKeyDown("return") && !isCalibrating)
         {
             if (isReady)
             {
                 edges.SetActive(false);
                 currentObject.SetActive(false);
                 recording = true;
+                GetComponent<AudioSource>().Play(0);
                 StartCoroutine(calibration());
             }
         }

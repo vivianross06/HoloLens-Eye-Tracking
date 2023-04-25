@@ -102,6 +102,7 @@ public class WorldStabilized : MonoBehaviour
                 edges.SetActive(false);
                 currentObject.SetActive(false);
                 recording = true;
+                GetComponent<AudioSource>().Play(0);
                 StartCoroutine(Evaluation());
             }
         }
