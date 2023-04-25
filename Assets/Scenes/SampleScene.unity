@@ -1108,6 +1108,13 @@ MonoBehaviour:
   worldTrackingSphere: {fileID: 1994234137}
   enterPitch: {fileID: 8300000, guid: cf04abb27ed1f1d4db317bcb20ed0321, type: 3}
   calibrationPitch: {fileID: 8300000, guid: 2a87457bc24efb94e90d2a67c87605f5, type: 3}
+  headConstrainedPitch: {fileID: 8300000, guid: bec2df65264095f4e9007729fe518038,
+    type: 3}
+  bodyConstrainedPitch: {fileID: 8300000, guid: 6dc75a519cf28564ea006c4dd6b3b45c,
+    type: 3}
+  ssWalkingPitch: {fileID: 8300000, guid: e505006b09a8ba84ba7240fb0d78b194, type: 3}
+  wsWalkingPitch: {fileID: 8300000, guid: c4a184607747ab244b63d230d582084a, type: 3}
+  hallwayPitch: {fileID: 8300000, guid: 9cf247af470c8f54aa1ddd58175322b8, type: 3}
 --- !u!1 &1051497438
 GameObject:
   m_ObjectHideFlags: 0
