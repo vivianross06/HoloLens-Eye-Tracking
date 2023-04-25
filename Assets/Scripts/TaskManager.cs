@@ -8,6 +8,9 @@ public class TaskManager : MonoBehaviour
     public GameObject screenTrackingSphere;
     public GameObject worldTrackingSphere;
 
+    public AudioClip enterPitch;
+    public AudioClip calibrationPitch;
+
     private static int taskIndex = 0;
     private static List<int> tasks;
     
@@ -154,6 +157,7 @@ public class TaskManager : MonoBehaviour
         DisableEverything();
         screenTrackingSphere.SetActive(true);
         screenTrackingSphere.GetComponent<Calibration>().enabled = true;
+        StartCoroutine(PlayScreenStabilizedAudio(1));
     }
 
     public void StartScreenStabilizedHeadConstrainedTask()
@@ -205,5 +209,18 @@ public class TaskManager : MonoBehaviour
         worldTrackingSphere.GetComponent<WorldStabilized>().enabled = false;
         worldTrackingSphere.GetComponent<Hallway>().enabled = false;
         worldTrackingSphere.SetActive(false);
+    }
+
+    private IEnumerator PlayScreenStabilizedAudio(int taskIndex)
+    {
+        AudioSource taskAudio = screenTrackingSphere.GetComponent<AudioSource>();
+        if (taskIndex == 1)
+        {
+            taskAudio.clip = calibrationPitch;
+            taskAudio.Play();
+            yield return new WaitForSeconds(0.5f);
+            taskAudio.Stop();
+            taskAudio.clip = enterPitch;
+        }
     }
 }

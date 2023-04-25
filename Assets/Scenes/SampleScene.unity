@@ -1106,6 +1106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenTrackingSphere: {fileID: 120538662}
   worldTrackingSphere: {fileID: 1994234137}
+  enterPitch: {fileID: 8300000, guid: cf04abb27ed1f1d4db317bcb20ed0321, type: 3}
+  calibrationPitch: {fileID: 8300000, guid: 2a87457bc24efb94e90d2a67c87605f5, type: 3}
 --- !u!1 &1051497438
 GameObject:
   m_ObjectHideFlags: 0
