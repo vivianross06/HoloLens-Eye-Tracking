@@ -121,7 +121,14 @@ public class TaskManager : MonoBehaviour
                 StartHallwayTask();
             }
         }
-        
+        if (Input.GetKeyDown("r"))
+        {
+            if (taskIndex > 0)
+            {
+                taskIndex--;
+                StartNextTask();
+            }
+        }
     }
 
     public void StartNextTask()

@@ -111,14 +111,28 @@ public class WorldStabilized : MonoBehaviour
         {
             if (currentObject != null)
             {
-                currentObject.transform.position += currentObject.transform.up * 0.03f;
+                if (movementMode == "translate")
+                {
+                    currentObject.transform.position += currentObject.transform.up * 0.03f;
+                }
+                else if (movementMode == "x")
+                {
+                    currentObject.transform.Rotate(1.0f, 0f, 0f);
+                }
             }
         }
         if (Input.GetKeyDown("down") && !isEvaluating)
         {
             if (currentObject != null)
             {
-                currentObject.transform.position -= currentObject.transform.up * 0.03f;
+                if (movementMode == "translate")
+                {
+                    currentObject.transform.position -= currentObject.transform.up * 0.03f;
+                }
+                else if (movementMode == "x")
+                {
+                    currentObject.transform.Rotate(-1.0f, 0f, 0f);
+                }
             }
         }
         if (Input.GetKeyDown("left") && !isEvaluating)
