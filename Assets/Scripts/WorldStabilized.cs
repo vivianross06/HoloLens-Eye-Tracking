@@ -58,7 +58,7 @@ public class WorldStabilized : MonoBehaviour
         countdownText.SetActive(false);
         if (recording)
         {
-            filename = filenamePrefix + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
+            filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
             string filePath = Path.Combine(Application.persistentDataPath, filename);
             File.WriteAllLines(filePath, log);
             log.Clear();
