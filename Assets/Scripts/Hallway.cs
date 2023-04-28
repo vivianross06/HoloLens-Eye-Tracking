@@ -21,7 +21,7 @@ public class Hallway : MonoBehaviour
     private float pathTime =5f;
     private bool isEvaluating = false;
 
-    private float minDistance = 1.5f;
+    private float minDistance = 1.7f;
     private int currentIndex = 0;
 
     // Start is called before the first frame update
