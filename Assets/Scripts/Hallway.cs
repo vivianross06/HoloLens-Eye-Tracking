@@ -74,10 +74,12 @@ public class Hallway : MonoBehaviour
             GetComponent<AudioSource>().Play(0);
             StartCoroutine(Evaluation());
         }
+        /*
         if (Input.GetKeyDown("p"))
         {
             TrackingPositions.SetActive(!TrackingPositions.activeSelf);
         }
+        */
     }
 
     IEnumerator Evaluation()
@@ -106,10 +108,10 @@ public class Hallway : MonoBehaviour
             start = gridTransforms[currentIndex];
             end = gridTransforms[currentIndex + 1];
             float timeElapsed = 0.0f;
-            while (timeElapsed < pathTime)
+            while (timeElapsed < pathTime || transform.position != end.position)
             {
                 movement = "moving";
-                transform.position = Vector3.Lerp(start.position, end.position, timeElapsed / pathTime);
+                transform.position = Vector3.Lerp(start.position, end.position, Mathf.Min(1, timeElapsed / pathTime));
                 timeElapsed += Time.deltaTime;
                 yield return null;
             }

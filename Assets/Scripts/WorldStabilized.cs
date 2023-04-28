@@ -260,10 +260,10 @@ public class WorldStabilized : MonoBehaviour
         for (int i = 0; i < 12; i++)
         {
             float timeElapsed = 0.0f;
-            while (timeElapsed < pathTime)
+            while (timeElapsed < pathTime || transform.position != end.position)
             {
                 movement = "moving";
-                transform.position = Vector3.Lerp(start.position, end.position, timeElapsed / pathTime);
+                transform.position = Vector3.Lerp(start.position, end.position, Mathf.Min(timeElapsed / pathTime, 1));
                 timeElapsed += Time.deltaTime;
                 yield return null;
             }
