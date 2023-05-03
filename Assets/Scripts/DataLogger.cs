@@ -137,8 +137,8 @@ public class DataLogger : MonoBehaviour
 
     public void SaveFile(string fileName)
     {
-        string filePath = Path.Combine(Application.dataPath, fileName);
-        //string filePath = Path.Combine(Application.persistentDataPath, fileName);
+        //string filePath = Path.Combine(Application.dataPath, fileName);
+        string filePath = Path.Combine(Application.persistentDataPath, fileName);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
