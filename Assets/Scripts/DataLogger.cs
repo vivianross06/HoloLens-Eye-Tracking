@@ -22,7 +22,7 @@ public class DataLogger : MonoBehaviour
 
     public void AddFrame(int frameNumber, string movement)
     {
-        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46}",
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50}",
                 System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff"),
                 frameNumber,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabled,
@@ -69,14 +69,18 @@ public class DataLogger : MonoBehaviour
                 Camera.main.transform.TransformVector(Vector3.forward).x,
                 Camera.main.transform.TransformVector(Vector3.forward).y,
                 Camera.main.transform.TransformVector(Vector3.forward).z,
-                movement
+                movement,
+                Mathf.Rad2Deg * Mathf.Atan(CoreServices.InputSystem.EyeGazeProvider.GazeDirection.x / CoreServices.InputSystem.EyeGazeProvider.GazeDirection.z),
+                Mathf.Rad2Deg * Mathf.Atan(CoreServices.InputSystem.EyeGazeProvider.GazeDirection.y / CoreServices.InputSystem.EyeGazeProvider.GazeDirection.z),
+                Mathf.Rad2Deg * Mathf.Atan(Camera.main.transform.InverseTransformPoint(transform.position).x / Camera.main.transform.InverseTransformPoint(transform.position).z),
+                Mathf.Rad2Deg * Mathf.Atan(Camera.main.transform.InverseTransformPoint(transform.position).y / Camera.main.transform.InverseTransformPoint(transform.position).z)
                 ));
     }
 
     public void AddHeader()
     {
         log.Clear();
-        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46}",
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50}",
                 "Time",
                 "Frame",
                 "EyeTrackingEnabled",
@@ -123,13 +127,18 @@ public class DataLogger : MonoBehaviour
                 "localZAxis.x",
                 "localZAxis.y",
                 "localZAxis.z",
-                "Movement"
+                "Movement",
+                "GazeAngleX",
+                "GazeAngleY",
+                "TargetAngleX",
+                "TargetAngleY"
                 ));
     }
 
     public void SaveFile(string fileName)
     {
-        string filePath = Path.Combine(Application.persistentDataPath, fileName);
+        string filePath = Path.Combine(Application.dataPath, fileName);
+        //string filePath = Path.Combine(Application.persistentDataPath, fileName);
         Debug.Log(filePath);
         File.WriteAllLines(filePath, log);
         log.Clear();
