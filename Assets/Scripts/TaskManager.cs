@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Microsoft.MixedReality.Toolkit.Input;
 
 public class TaskManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class TaskManager : MonoBehaviour
     private List<int> order6 = new List<int>() { 6, 1, 3, 5, 2, 4 };
 
     private bool automaticMode = false;
+    private bool pointerEnabled = true;
 
     // Start is called before the first frame update
     void Start()
@@ -127,6 +129,19 @@ public class TaskManager : MonoBehaviour
             {
                 taskIndex--;
                 StartNextTask();
+            }
+        }
+        if (Input.GetKeyDown("p"))
+        {
+            if (pointerEnabled)
+            {
+                PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
+                pointerEnabled = false;
+            }
+            else
+            {
+                PointerUtils.SetHandRayPointerBehavior(PointerBehavior.Default);
+                pointerEnabled = true;
             }
         }
     }

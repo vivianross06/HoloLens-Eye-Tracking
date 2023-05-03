@@ -942,9 +942,9 @@ GameObject:
   - component: {fileID: 963194226}
   - component: {fileID: 963194232}
   - component: {fileID: 963194231}
-  - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   - component: {fileID: 963194233}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4621,8 +4621,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 156915611154346185, guid: fd330c6a51b70504392e81d35ac4cb05,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 156915611154346185, guid: fd330c6a51b70504392e81d35ac4cb05,
+        type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.37
+      value: 0.36
       objectReference: {fileID: 0}
     - target: {fileID: 156915611154346185, guid: fd330c6a51b70504392e81d35ac4cb05,
         type: 3}
@@ -4841,8 +4846,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5860724190374904344, guid: 4858926e82c191e4998e0531d147f5f2,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 5860724190374904344, guid: 4858926e82c191e4998e0531d147f5f2,
+        type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.37
+      value: 0.36
       objectReference: {fileID: 0}
     - target: {fileID: 5860724190374904344, guid: 4858926e82c191e4998e0531d147f5f2,
         type: 3}
