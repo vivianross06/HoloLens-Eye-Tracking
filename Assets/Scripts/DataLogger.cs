@@ -22,8 +22,8 @@ public class DataLogger : MonoBehaviour
 
     public void AddFrame(int frameNumber, string movement)
     {
-        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50}",
-                System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff"),
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51},{52},{53}",
+                System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffffff"),
                 frameNumber,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabled,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeCalibrationValid,
@@ -44,6 +44,9 @@ public class DataLogger : MonoBehaviour
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.x,
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.y,
                 CoreServices.InputSystem.EyeGazeProvider.HitNormal.z,
+                Camera.main.transform.InverseTransformPoint(CoreServices.InputSystem.EyeGazeProvider.HitPosition).x,
+                Camera.main.transform.InverseTransformPoint(CoreServices.InputSystem.EyeGazeProvider.HitPosition).y,
+                Camera.main.transform.InverseTransformPoint(CoreServices.InputSystem.EyeGazeProvider.HitPosition).z,
                 Camera.main.transform.position.x,
                 Camera.main.transform.position.y,
                 Camera.main.transform.position.z,
@@ -80,7 +83,7 @@ public class DataLogger : MonoBehaviour
     public void AddHeader()
     {
         log.Clear();
-        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50}",
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46},{47},{48},{49},{50},{51},{52},{53}",
                 "Time",
                 "Frame",
                 "EyeTrackingEnabled",
@@ -102,6 +105,9 @@ public class DataLogger : MonoBehaviour
                 "EyeHitNormal.x",
                 "EyeHitNormal.y",
                 "EyeHitNormal.z",
+                "LocalEyeHitPosition.x",
+                "LocalEyeHitPosition.y",
+                "LocalEyeHitPosition.z",
                 "HeadGazeOrigin.x",
                 "HeadGazeOrigin.y",
                 "HeadGazeOrigin.z",
