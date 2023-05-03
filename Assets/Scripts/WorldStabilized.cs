@@ -59,9 +59,10 @@ public class WorldStabilized : MonoBehaviour
         if (recording)
         {
             filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
-            string filePath = Path.Combine(Application.persistentDataPath, filename);
-            File.WriteAllLines(filePath, log);
-            log.Clear();
+            GetComponent<DataLogger>().SaveFile(filename);
+            //string filePath = Path.Combine(Application.persistentDataPath, filename);
+            //File.WriteAllLines(filePath, log);
+            //log.Clear();
             recording = false;
         }
         GetComponent<Renderer>().enabled = false;
@@ -78,7 +79,8 @@ public class WorldStabilized : MonoBehaviour
     {
         if (recording)
         {
-            AddFrame();
+            //AddFrame();
+            GetComponent<DataLogger>().AddFrame(frameNumber, movement);
             frameNumber++;
         }
         /*
@@ -238,7 +240,8 @@ public class WorldStabilized : MonoBehaviour
         end = null;
         filename = filenamePrefix + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".csv";
         frameNumber = 0;
-        AddHeader();
+        //AddHeader();
+        GetComponent<DataLogger>().AddHeader();
         chooseNewPath();
         transform.position = start.position;
         countdownText.SetActive(true);
@@ -273,11 +276,12 @@ public class WorldStabilized : MonoBehaviour
         }
         GetComponent<Renderer>().enabled = false;
         recording = false;
-        string filePath = Path.Combine(Application.persistentDataPath, filename);
+        GetComponent<DataLogger>().SaveFile(filename);
+        //string filePath = Path.Combine(Application.persistentDataPath, filename);
         //string filePath = Path.Combine(Application.dataPath, filename);
-        Debug.Log(filePath);
-        File.WriteAllLines(filePath, log);
-        log.Clear();
+        //Debug.Log(filePath);
+        //File.WriteAllLines(filePath, log);
+        //log.Clear();
         frameNumber = 0;
         isEvaluating = false;
         countdownText.GetComponent<TextMesh>().text = "Done";
@@ -307,7 +311,7 @@ public class WorldStabilized : MonoBehaviour
 
     void AddFrame()
     {
-        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}, {30}",
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46}",
                 System.DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss.ffff"),
                 frameNumber,
                 CoreServices.InputSystem.EyeGazeProvider.IsEyeTrackingEnabled,
@@ -335,9 +339,25 @@ public class WorldStabilized : MonoBehaviour
                 Camera.main.transform.rotation.x,
                 Camera.main.transform.rotation.y,
                 Camera.main.transform.rotation.z,
+                Camera.main.transform.rotation.w,
+                Camera.main.transform.eulerAngles.x,
+                Camera.main.transform.eulerAngles.y,
+                Camera.main.transform.eulerAngles.z,
                 transform.position.x,
                 transform.position.y,
                 transform.position.z,
+                Camera.main.transform.InverseTransformPoint(transform.position).x,
+                Camera.main.transform.InverseTransformPoint(transform.position).y,
+                Camera.main.transform.InverseTransformPoint(transform.position).z,
+                Camera.main.transform.TransformVector(Vector3.right).x,
+                Camera.main.transform.TransformVector(Vector3.right).y,
+                Camera.main.transform.TransformVector(Vector3.right).z,
+                Camera.main.transform.TransformVector(Vector3.up).x,
+                Camera.main.transform.TransformVector(Vector3.up).y,
+                Camera.main.transform.TransformVector(Vector3.up).z,
+                Camera.main.transform.TransformVector(Vector3.forward).x,
+                Camera.main.transform.TransformVector(Vector3.forward).y,
+                Camera.main.transform.TransformVector(Vector3.forward).z,
                 movement
                 ));
     }
@@ -345,7 +365,7 @@ public class WorldStabilized : MonoBehaviour
     void AddHeader()
     {
         log.Clear();
-        log.Add(string.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, {22}, {23}, {24}, {25}, {26}, {27}, {28}, {29}, {30}",
+        log.Add(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},{27},{28},{29},{30},{31},{32},{33},{34},{35},{36},{37},{38},{39},{40},{41},{42},{43},{44},{45},{46}",
                 "Time",
                 "Frame",
                 "EyeTrackingEnabled",
@@ -370,12 +390,28 @@ public class WorldStabilized : MonoBehaviour
                 "HeadGazeOrigin.x",
                 "HeadGazeOrigin.y",
                 "HeadGazeOrigin.z",
-                "HeadGazeDirection.x",
-                "HeadGazeDirection.y",
-                "HeadGazeDirection.z",
+                "HeadRotation.x",
+                "HeadRotation.y",
+                "HeadRotation.z",
+                "HeadRotation.w",
+                "HeadEulerAngles.x",
+                "HeadEulerAngles.y",
+                "HeadEulerAngles.z",
                 "transform.position.x",
                 "transform.position.y",
                 "transform.position.z",
+                "localTransform.position.x",
+                "localTransform.position.y",
+                "localTransform.position.z",
+                "localXAxis.x",
+                "localXAxis.y",
+                "localXAxis.z",
+                "localYAxis.x",
+                "localYAxis.y",
+                "localYAxis.z",
+                "localZAxis.x",
+                "localZAxis.y",
+                "localZAxis.z",
                 "Movement"
                 ));
     }
