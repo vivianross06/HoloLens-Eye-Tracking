@@ -154,11 +154,14 @@ public class Calibration : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
         countdownText.SetActive(false);
-        movement = "static";
+        movement = "transition";
         GetComponent<Renderer>().enabled = true;
         while (indices.Count > 0)
         {
             transform.position = end.position;
+            movement = "transition";
+            yield return new WaitForSeconds(0.5f);
+            movement = "static";
             yield return new WaitForSeconds(2);
             nextIndex = indices[Random.Range(0, indices.Count)];
             indices.Remove(nextIndex);
