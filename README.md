@@ -30,3 +30,10 @@ Instructions for deploying an application to the HoloLens 2 via the device porta
 3. Click through the prompts (for the most part, the default options are ok). Make sure that the build version is Release, and the architecture is ARM64.
 4. Click Build. After a few minutes, this should create a .appx file within your specified directory.
 
+### Deploy to the HoloLens
+
+1. Connect to the HoloLens 2 device portal via web browser.
+2. Navigate to Views -> Apps and select the Local Storage tab.
+3. Click Choose File and select the .appx file you generated in Visual Studio.
+4. Click Install. The application should now be installed on your HoloLens 2.
+
