@@ -22,3 +22,11 @@ Instructions for deploying an application to the HoloLens 2 via the device porta
 2. Make sure the Target Device is HoloLens, the Architecture is ARM64, and Build Configuration is set to Release.
 3. Add Sample Scene to the Scenes in Build list. This is the only scene needed - the other scenes are not functional.
 4. Hit Build and specify your build directory.
+
+### Build the .appx file in Visual Studio
+
+1. After building the app in Unity, a Windows Explorer window will open. Navigate to your build directory, where there should be a Visual Studio solution file (.sln). Click on this file to open it in Visual Studio.
+2. Right-click on the project in the solution explorer and click Publish -> Create App Packages.
+3. Click through the prompts (for the most part, the default options are ok). Make sure that the build version is Release, and the architecture is ARM64.
+4. Click Build. After a few minutes, this should create a .appx file within your specified directory.
+
